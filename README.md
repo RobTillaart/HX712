@@ -16,31 +16,31 @@ Arduino library for HX712 24 bit ADC used for load cells and scales.
 
 ## Description
 
-_This readme.md is based upon the HX711 readme.md, so it may contain some sections
-that are not updated yet.
+*This readme.md is based upon the HX711 readme.md, so it may contain some sections
+that are not updated yet.*
 
 **Experimental**
 
 This HX712 library has a public interface (API) which is based upon my HX711 library
 which was based upon version 0.7.3, by [Bogde](https://github.com/bogde/HX712).
+So credits for API reuse to Bogde.
+The API of the HX711 is reused as much as possible to be compatible on the basic
+interaction level.
 
-The API of my HX711 is reused as much as possible to be compatible on the basic 
-interaction level, so credits for the reused API go to Bogde.
-
-The HX712 is not compatible with the HX711 on hardware connections. 
+The HX712 is **not compatible** with the HX711 on hardware connections.
 See the datasheet for details.
-The HX712 is similar to the HX711 as it is also an 24 bit ADC.
-Functionally the HX712 has two distinctive features, battery monitoring and software 
+The HX712 is however similar to the HX711 in applications as it is also an 24 bit ADC.
+Functionally the HX712 has two distinctive features, battery monitoring and software
 switching between 10 and 40 SPS which the HX711 not has.
 Note the HX711 can (in theory) switch between 10 and 80 SPS but only through hardware.
-
 Another difference is that the HX711 has 2 channels where the HX712 has only one.
-Furthermore the GAIN factors are different.
+Furthermore the GAIN factors are different. See table below.
 
 The library was written as I encountered the HX712 datasheet and found the software
-switching of 10/40 SPS more than interesting.
+switching of 10/40 SPS more than interesting. Reason enough to implement an initial
+version for an Arduino library.
 
-The library is not tested yet as I have no breakout board.
+The library is not tested yet as I have no breakout board / hardware.
 So if you have experience with the HX712 please let me know.
 
 Feedback as always is welcome.
@@ -79,7 +79,7 @@ Next step is calibration for which a number of functions exist.
 - **tare()** measures the offset of the zero point.
 - **set_scale(factor)** set a known conversion factor e.g. from EEPROM.
 - **calibrate_scale(weight, times)** determines the scale factor based upon a known weight e.g. 1 Kg.
-The weight is typical in grams, however any unit can be used, depending on the 
+The weight is typical in grams, however any unit can be used, depending on the
 load cell used.
 
 Steps to take for calibration
@@ -104,16 +104,17 @@ Note that the units used in **calibrate_scale()** will be returned by **get_unit
 
 - **HX712()** constructor.
 - **~HX712()** destructor.
-- **void begin(uint8_t dataPin, uint8_t clockPin, bool fastProcessor = false, bool doReset = true)** sets a fixed gain 128 for now.
+- **void begin(uint8_t dataPin, uint8_t clockPin, bool fastProcessor = false, bool doReset = true)**
+sets the gain to 128 and SPS to 10.
   - The parameter fastProcessor adds a 1 uS delay for each clock half-cycle to keep the time greater than 200 nS.
-  - The parameter doReset is experimental in 0.6.3.
-  It defaults to true (== backwards compatible) causing a call to reset(), taking extra time 
-  before the device is ready to make new measurements. See reset() below. 
-  Note that not calling reset() leaves the ADC in the previous or even an undefined state, 
+  - The parameter doReset is experimental (in 0.6.3 HX711).
+  It defaults to true (== backwards compatible) causing a call to reset(), taking extra time
+  before the device is ready to make new measurements. See reset() below.
+  Note that not calling reset() leaves the ADC in the previous or even an undefined state,
   so use with care. (needs testing)
 - **void reset()** set internal state to the start condition.
-Reset() also does a power_down() / power_up() cycle. 
-This cycle adds a delay of 400 (RATE = 10 SPS) or 50 (RATE = 40 SPS) milliseconds.
+Reset() also does a power_down() / power_up() cycle.
+This cycle adds a delay of 400 (RATE = 10 SPS) or 100 (RATE = 40 SPS) milliseconds.
 
 
 ### isReady
@@ -121,9 +122,9 @@ This cycle adds a delay of 400 (RATE = 10 SPS) or 50 (RATE = 40 SPS) millisecond
 There are different ways to wait for a new measurement.
 
 - **bool is_ready()** checks if load cell is ready to read.
-- **void wait_ready(uint32_t ms = 0)** wait until ready, check every ms.
-- **bool wait_ready_retry(uint8_t retries = 3, uint32_t ms = 0)** wait max retries.
-- **bool wait_ready_timeout(uint32_t timeout = 1000, uint32_t ms = 0)** wait max timeout milliseconds.
+- **void wait_ready(uint32_t ms = 0)** wait until ready, check every ms milliseconds.
+- **bool wait_ready_retry(uint8_t retries = 3, uint32_t ms = 0)** wait max retries, check every ms milliseconds.
+- **bool wait_ready_timeout(uint32_t timeout = 1000, uint32_t ms = 0)** wait max timeout milliseconds, check every ms milliseconds.
 
 
 ### Read
@@ -133,7 +134,7 @@ Best practice is to check with isReady() before calling read().
 
 - **float read()** get a raw read.
 - **float read_average(uint8_t times = 10)** get average of times raw reads. times = 1 or more.
-- **float read_median(uint8_t times = 7)** get median of multiple raw reads. 
+- **float read_median(uint8_t times = 7)** get median of multiple raw reads.
 times = 3..15 - odd numbers preferred.
 - **float read_medavg(uint8_t times = 7)** get average of "middle half" of multiple raw reads.
 times = 3..15 - odd numbers preferred.
@@ -153,7 +154,7 @@ Constants (see .h file)
 - **HX712_RATE_10 = 10** default
 - **HX712_RATE_40 = 40**
 
-The selection of gain is in theory straightforward. 
+The selection of gain is in theory straightforward.
 
 - **bool set_gain_rate(uint8_t gain = HX712_GAIN_128, uint8_t rate = HX712_RATE_10)** values: 128 (default) or 256.
 If one uses an invalid value for gain or rate, the function returns false.
@@ -163,9 +164,9 @@ The function will execute a dummy **read()** so the next "user" **read()** will 
 According to the datasheet (table page 3), the gain/SPS change may take up to 400 ms.
 
 If you use **set_gain_rate()** the HX712 can be in different states.
-If there is an expected or unexpected reboot of the MCU, this could lead 
-to an unknown state at the reboot of the code. 
-Therefore it is strongly advised to call **set_gain_rate()** explicitly in **setup()** 
+If there is an expected or unexpected reboot of the MCU, this could lead
+to an unknown state at the reboot of the code.
+Therefore it is strongly advised to call **set_gain_rate()** explicitly in **setup()**
 so the device is in a known state.
 
 
@@ -201,13 +202,15 @@ Note that in **HX712_RAW_MODE** the times parameter will be ignored => just call
 
 - **float get_value(uint8_t times = 1)** read value, corrected for offset.
 - **float get_units(uint8_t times = 1)** read value, converted to proper units.
-- **bool set_scale(float scale = 1.0)** set scale factor which is normally a positive 
+- **bool set_scale(float scale = 1.0)** set scale factor which is normally a positive
 number larger than 50. Depends on load-cell used.
 Returns false if scale == 0.
-Note that for some specific applications, scale might be negative. 
+Note that for some specific applications, scale might be negative.
 - **float get_scale()** returns set scale factor.
 - **void set_offset(int32_t offset = 0)** idem.
 - **int32_t get_offset()** idem.
+
+If one sets the scale to 1.0 and offset to 0.0, one gets the raw measurements from the HX712.
 
 
 ### Tare & calibration I
@@ -229,7 +232,7 @@ Note this differs after calls to **calibrate_scale()**.
 Use **get_offset()** to get only the offset.
 - **bool tare_set()** checks if a tare has been set.
 Assumes offset is not zero, which is true for all load cells tested.
-- **void calibrate_scale(float weight, uint8_t times = 10)** 
+- **void calibrate_scale(float weight, uint8_t times = 10)**
 The calibration weight averages times measurements to improve accuracy.
 Weight is typical in grams, however any unit can be used.
 Be aware this unit will also be returned by **get_units()**.
@@ -239,11 +242,11 @@ other units e.g. define the weight as 2.5 kg instead of 2500 gram.
 The function **GetUnits()** will then return its value in kg too.
 
 Also by using a float the range of calibration weights is substantially increased.
-One can now define 250 gram as 250000 milligram, where before the value was max 
+One can now define 250 gram as 250000 milligram, where before the value was max
 65535 units (theoretical increase of precision from 4.8 to 6.9 digits).
-This allows the calibration of superheavy load cells, e.g 500 kg and use a 
-defined weight of 100000 gram. 
-Finally the use of floats allow the use of decimals e.g. a calibration weight 
+This allows the calibration of superheavy load cells, e.g 500 kg and use a
+defined weight of 100000 gram.
+Finally the use of floats allow the use of decimals e.g. a calibration weight
 of 125.014 kg or 306.4 gram.
 
 Note: calibrate_scale() uses averaging and does not use the mode set.
@@ -256,25 +259,25 @@ Note: calibrate_scale() can have a negative value as weight e.g. force of a ball
 A load cell + HX712 module without weight gives a raw value, mostly not equal to zero.
 The function **get_tare()** is used to measure this raw value and allows the user
 to define this value as a zero weight (force) point.
-This zero point is normally without any load, however it is possible to define 
+This zero point is normally without any load, however it is possible to define
 a zero point with a "fixed" load e.g. a cup, a dish, even a spring or whatever.
 This allows the system to automatically subtract the weight / force of the cup etc.
 
-**Warning**: The user must be aware that the "fixed" load together with the 
+**Warning**: The user must be aware that the "fixed" load together with the
 "variable" load does not exceed the specifications of the load cell.
 
-E.g. a load cell which can handle 1000 grams with a cup of 300 grams should not 
+E.g. a load cell which can handle 1000 grams with a cup of 300 grams should not
 be calibrated with a weight of more than 700 grams.
-In fact it is better to calibrate with a weight in the order of 80 to 90% of 
+In fact it is better to calibrate with a weight in the order of 80 to 90% of
 the maximum load so in this example a weight of 500 to 600 grams.
 That would make the total 800-900 grams == 80/90% of the max load.
 
-Another point to consider when calibrating is to use a weight that is 
+Another point to consider when calibrating is to use a weight that is
 in the range you want to make your measurements.
-E.g. if you want to measure coffee beans in portions of 250 grams, use 
+E.g. if you want to measure coffee beans in portions of 250 grams, use
 a weight in the range 200-300 grams. Could just save an extra bit.
 
-Furthermore it is also important to do the calibration at the temperature you 
+Furthermore it is also important to do the calibration at the temperature you
 expect to do the weight measurements. See temperature section below.
 
 
@@ -290,10 +293,10 @@ of the accuracy of the load cell.
 
 ### Power management
 
-- **void power_down()** idem. Explicitly blocks for 64 microseconds. 
-(See Page 5 datasheet). 
-- **void power_up()** wakes up the HX712. 
-It should reset the HX712 to defaults but this is not always seen. 
+- **void power_down()** idem. Explicitly blocks for 64 microseconds.
+(See Page 5 datasheet).
+- **void power_up()** wakes up the HX712.
+It should reset the HX712 to defaults but this is not always seen.
 See discussion issue #27 GitHub. Needs more testing.
 
 Note: Having the RATE set to 10 or 80 SPS changes the time to start up.
@@ -340,7 +343,7 @@ differences in your code.
 
 ### Separate lines
 
-Simplest way to control multiple HX712's is to have a separate **DOUT** and **CLK** 
+Simplest way to control multiple HX712's is to have a separate **DOUT** and **CLK**
 line for every HX712 connected.
 
 
@@ -355,7 +358,7 @@ Although to control the multiplexer one need some extra lines and code.
 
 See **HX_loadcell_array.ino**
 
-Another way to control multiple HX712's is to share the **CLK** line. 
+Another way to control multiple HX712's is to share the **CLK** line.
 This has a few side effects which might be acceptable or not.
 
 Known side effects - page 4 and 5 datasheet.

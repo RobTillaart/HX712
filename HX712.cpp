@@ -50,8 +50,10 @@ void HX712::reset()
   _offset   = 0;
   _scale    = 1;
   _gain     = HX712_GAIN_128;
+  _rate     = 10;
   _lastTimeRead = 0;
   _mode     = HX712_AVERAGE_MODE;
+  read();  //  dummy read to force next call!
 }
 
 
@@ -61,33 +63,33 @@ bool HX712::is_ready()
 }
 
 
-void HX712::wait_ready(uint32_t ms)
+void HX712::wait_ready(uint32_t milliSeconds)
 {
   while (!is_ready())
   {
-    delay(ms);
+    delay(milliSeconds);
   }
 }
 
 
-bool HX712::wait_ready_retry(uint8_t retries, uint32_t ms)
+bool HX712::wait_ready_retry(uint8_t retries, uint32_t milliSeconds)
 {
   while (retries--)
   {
     if (is_ready()) return true;
-    delay(ms);
+    delay(milliSeconds);
   }
   return false;
 }
 
 
-bool HX712::wait_ready_timeout(uint32_t timeout, uint32_t ms)
+bool HX712::wait_ready_timeout(uint32_t timeout, uint32_t milliSeconds)
 {
   uint32_t start = millis();
   while (millis() - start < timeout)
   {
     if (is_ready()) return true;
-    delay(ms);
+    delay(milliSeconds);
   }
   return false;
 }
@@ -138,8 +140,7 @@ float HX712::read()
   //   28    Differential    256     10      4
   //   29    Differential    256     40      5
   //
-  //  selection goes through the set_gain(gain) 
-  //  and setRate10SPS() and setRate40SPS();
+  //  selection goes through the set_gain_rate(gain, rate)
   //
   uint8_t m = 1;
   if (_mode == HX712_BATTERY_MODE) m = 2;

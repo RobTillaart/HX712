@@ -54,12 +54,12 @@ public:
   bool     is_ready();
 
   //  wait until ready,
-  //  check every ms
-  void     wait_ready(uint32_t ms = 0);
-  //  max # retries
-  bool     wait_ready_retry(uint8_t retries = 3, uint32_t ms = 0);
-  //  max timeout
-  bool     wait_ready_timeout(uint32_t timeout = 1000, uint32_t ms = 0);
+  //  check every ms milliSeconds
+  void     wait_ready(uint32_t milliSeconds = 0);
+  //  max # retries, check every ms milliSeconds
+  bool     wait_ready_retry(uint8_t retries = 3, uint32_t milliSeconds = 0);
+  //  max timeout, check every ms milliSeconds
+  bool     wait_ready_timeout(uint32_t timeout = 1000, uint32_t milliSeconds = 0);
 
 
   ///////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ public:
   //  note that changing gain/channel takes up to 400 ms (page 3)
   //  if forced == true, the gain will be forced set
   //  even it is already the right value
-  bool     set_gain_rate(uint16_t gain = HX712_GAIN_128, 
+  bool     set_gain_rate(uint16_t gain = HX712_GAIN_128,
                          uint8_t rate = 10);
   uint16_t get_gain();
   uint8_t  get_rate();
@@ -171,10 +171,6 @@ public:
   //
   void     power_down();
   void     power_up();
-
-
-  
-
 
   //  TIME OF LAST READ
   uint32_t last_time_read();
