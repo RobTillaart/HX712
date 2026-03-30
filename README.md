@@ -304,28 +304,12 @@ of the accuracy of the load cell.
 It should reset the HX712 to defaults but this is not always seen.
 See discussion issue #27 GitHub. Needs more testing.
 
-Note: Having the RATE set to 10 or 80 SPS changes the time to start up.
-At 10 SPS it takes 400 milliseconds, at 80 SPS it takes 50 milliseconds.
+Note: Having the RATE set to 10 or 40 SPS changes the time to start up.
+At 10 SPS it takes 400 milliseconds, at 40 SPS it takes 100 milliseconds.
 (See datasheet, Output settling time on page 3)
 
 Note: add a pull up resistor on the CLK pin prevents waking up when the
 processor goes to sleep and cannot keep the CLK pin HIGH.
-
-
-### Rate
-
-**Experimental**
-
-See section "10 or 80 SPS" above.
-
-Note this only works if the **RATE** pin is exposed and connected to
-the IO pin configured in set_rate_pin().
-If not configured the other functions won't work.
-
-- **void set_rate_pin(uint8_t pin)** sets the IO pin for SPS selection.
-- **void set_rate_10SPS()** sets rate to 10 SPS.
-- **void set_rate_80SPS()** sets rate to 80 SPS.
-- **uint8_t get_rate()** returns 10 d(default) or 80.
 
 
 ## Notes
