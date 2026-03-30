@@ -281,6 +281,20 @@ void HX712::set_runavg_mode()
   _mode = HX712_RUNAVG_MODE;
 }
 
+float HX712::read_battery()
+{
+  //  save current mode
+  uint8_t previousMode = _mode;
+  //  set battery mode
+  _mode = HX712_BATTERY_MODE;
+  read();
+  float volts = read();
+  //  restire mode
+  _mode = previousMode;
+  read();
+  return volts;
+}
+
 
 uint8_t HX712::get_mode()
 {

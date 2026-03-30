@@ -19,6 +19,8 @@ read_median	KEYWORD2
 read_medavg	KEYWORD2
 read_runavg	KEYWORD2
 
+read_battery	KEYWORD2
+
 get_value	KEYWORD2
 get_units	KEYWORD2
 

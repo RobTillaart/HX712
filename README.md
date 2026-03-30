@@ -143,6 +143,11 @@ The weight alpha can be set to any value between 0 and 1, times >= 1.
 - **uint32_t last_read()** returns timestamp in milliseconds of last read.
 
 
+### Read Battery
+
+- **float read_battery()** returns the value of battery.
+TODO test how this is coded and if a factor is needed.
+
 ### Gain
 
 The HX712 has only one channel
@@ -302,6 +307,9 @@ See discussion issue #27 GitHub. Needs more testing.
 Note: Having the RATE set to 10 or 80 SPS changes the time to start up.
 At 10 SPS it takes 400 milliseconds, at 80 SPS it takes 50 milliseconds.
 (See datasheet, Output settling time on page 3)
+
+Note: add a pull up resistor on the CLK pin prevents waking up when the
+processor goes to sleep and cannot keep the CLK pin HIGH.
 
 
 ### Rate

@@ -87,6 +87,13 @@ public:
   //  times = 1 or more.
   float    read_runavg(uint8_t times = 7, float alpha = 0.5);
 
+  //  TODO test with hardware.
+  //  0.1.0 behaviour
+  //  saves current mode
+  //  reads the battery
+  //  restores current mode.
+  float    read_battery();
+
 
   ///////////////////////////////////////////////////////////////
   //
