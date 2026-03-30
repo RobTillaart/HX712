@@ -57,7 +57,6 @@ Feedback as always is welcome.
 |  SPS SW switching  |    N    |    Y    |
 
 
-
 ### Related
 
 - https://github.com/bogde/HX711
@@ -149,34 +148,25 @@ The HX712 has only one channel
 
 Constants (see .h file)
 
-- **HX712_GAIN_128 = 128**  This is the default in the constructor.
+- **HX712_GAIN_128 = 128** This is the default in the constructor.
 - **HX712_GAIN_256 = 256**
+- **HX712_RATE_10 = 10** default
+- **HX712_RATE_40 = 40**
 
 The selection of gain is in theory straightforward. 
 
-- **bool set_gain(uint8_t gain = HX712_GAIN_128, bool forced = false)** values: 128 (default) or 256.
-If one uses an invalid value for the parameter gain, the channel and gain are not changed.
-If forced == false it will not set the new gain if the library "thinks" it
-already has the right value.
-If forced == true, it will explicitly try to set the gain/channel again.
-This includes a dummy **read()** so the next "user" **read()** will give the right info.
-- **uint16_t get_gain()** returns set gain (128, 64 or 32).
+- **bool set_gain_rate(uint8_t gain = HX712_GAIN_128, uint8_t rate = HX712_RATE_10)** values: 128 (default) or 256.
+If one uses an invalid value for gain or rate, the function returns false.
+The function will execute a dummy **read()** so the next "user" **read()** will give the right info.
+- **uint16_t get_gain()** returns set gain (128 or 256).
 
-By setting the gain to one of the three constants the gain and the channel is selected.
-The **set_gain()** does a dummy read if gain has changed (or forced == true) so the 
-next call to **read()** will return info from the selected channel/gain.
+According to the datasheet (table page 3), the gain/SPS change may take up to 400 ms.
 
-According to the datasheet the gain/channel change may take up to 400ms (table page 3).
-
-Warning 1: if you use **set_gain()** in your program the HX712 can be in different states.
+If you use **set_gain_rate()** the HX712 can be in different states.
 If there is an expected or unexpected reboot of the MCU, this could lead 
 to an unknown state at the reboot of the code. 
-So in such case it is strongly advised to call **set_gain()** explicitly in **setup()** 
+Therefore it is strongly advised to call **set_gain_rate()** explicitly in **setup()** 
 so the device is in a known state.
-
-Warning 2: In practice it seems harder to get the channel and gain selection as reliable
-as the datasheet states it should be. So use with care. (feedback welcome)
-See discussion #27 HX712. 
 
 
 ### Read mode
@@ -190,6 +180,7 @@ Constants (see .h file)
 - **HX712_MEDIAN_MODE**
 - **HX712_MEDAVG_MODE**
 - **HX712_RUNAVG_MODE**
+- **HX712_BATTERY_MODE**  TODO implement
 
 
 In **HX712_MEDIAN_MODE** and **HX712_MEDAVG_MODE** mode only 3..15 samples are allowed
@@ -391,11 +382,13 @@ See https://github.com/RobTillaart/HX711/issues/40
 #### Must
 
 - update documentation
-- keep in sync with HX711.
 - test with hardware.
-- performance
+- implement HX712_BATTERY_MODE
 
 #### Should
+
+- keep in sync with HX711.
+
 
 #### Could
 

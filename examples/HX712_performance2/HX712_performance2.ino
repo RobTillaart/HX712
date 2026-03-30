@@ -38,6 +38,8 @@ void setup()
   scale.tare();
 
   measure();
+
+  scale.set_gain_rate(128, 40);
 }
 
 
@@ -64,6 +66,8 @@ void measure()
   Serial.println(count);
   Serial.print("calls per second: ");
   Serial.println(count / 60.0);
+  Serial.print(" micros per call: ");
+  Serial.println(60e6 / count);
 }
 
 

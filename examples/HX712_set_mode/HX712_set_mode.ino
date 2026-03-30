@@ -27,7 +27,7 @@ void setup()
   Serial.println();
 
   scale.begin(dataPin, clockPin);
-
+  
   //  TODO find a nice solution for this calibration..
   //  loadcell factor 20 KG
   scale.set_scale(127.15);
@@ -37,9 +37,8 @@ void setup()
   //  reset the scale to zero = 0
   scale.tare();
 
-
-  Serial.println();
   scale.set_average_mode();
+  
   Serial.print(scale.get_mode());
   Serial.println("\tPERFORMANCE set_average_mode");
   delay(10);

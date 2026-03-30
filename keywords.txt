@@ -33,8 +33,9 @@ tare	KEYWORD2
 get_tare	KEYWORD2
 tare_set	KEYWORD2
 
-set_gain	KEYWORD2
+set_gain_rate	KEYWORD2
 get_gain	KEYWORD2
+get_rate	KEYWORD2
 
 set_scale	KEYWORD2
 get_scale	KEYWORD2
@@ -47,13 +48,7 @@ calibrate_scale	KEYWORD2
 power_down	KEYWORD2
 power_up	KEYWORD2
 
-set_rate_pin	KEYWORD2
-set_rate_10SPS	KEYWORD2
-set_rate_40SPS	KEYWORD2
-get_rate	KEYWORD2
-
 last_read	KEYWORD2
-
 
 
 # Instances (KEYWORD2)
@@ -70,4 +65,7 @@ HX712_RUNAVG_MODE	LITERAL1
 
 HX712_GAIN_128	LITERAL1
 HX712_GAIN_256	LITERAL1
+
+HX712_RATE_10	LITERAL1
+HX712_RATE_40	LITERAL1
 

@@ -339,7 +339,6 @@ bool HX712::set_gain_rate(uint16_t gain, uint8_t rate)
   return true;
 }
 
-
 uint16_t HX712::get_gain()
 {
   return _gain;
