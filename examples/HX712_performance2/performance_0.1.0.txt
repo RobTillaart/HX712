@@ -1,0 +1,9 @@
+BOARD:  UNO R3
+IDE:    1.8.19
+
+(dry run with no HW)
+
+HX712_performance2.ino
+HX712_LIB_VERSION: 0.1.0
+
+TODO

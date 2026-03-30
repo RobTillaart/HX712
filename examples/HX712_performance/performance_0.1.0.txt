@@ -1,0 +1,7 @@
+BOARD:  UNO R3
+IDE:    1.8.19
+
+HX712_LIB_VERSION: 0.1.0
+
+TODO
+
